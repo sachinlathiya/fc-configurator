@@ -1,26 +1,26 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import ProjectForm from './components/ProjectForm';
-import ProjectSummary from './components/ProjectSummary';
-import ProjectList from './components/ProjectList';
-import { theme } from './theme/theme';
-import React from 'react';
+import Routes from './Routes';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#9c27b0',
+    },
+  },
+});
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<ProjectForm />} />
-          <Route
-            path="/summary/:projectName"
-            element={<ProjectSummary />}
-          />
-          <Route path="/all-projects" element={<ProjectList />} />
-        </Routes>
-      </Router>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
