@@ -21,7 +21,7 @@ const ProjectList = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        let apiUrl = `${process.env.REACT_APP_API_URL}` || `http://localhost:5000/api`;
+        let apiUrl =  import.meta.env.REACT_APP_API_URL ?? `http://localhost:5000/api`;
         const response = await axios.get(`${apiUrl}/projects`);
         setProjects(response.data);
       } catch (error) {
@@ -39,7 +39,7 @@ const ProjectList = () => {
       
       <Button
         component={Link}
-        to="/"
+        to="/add-project"
         variant="contained"
         sx={{ mb: 3 }}
       >

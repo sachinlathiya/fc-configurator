@@ -1,54 +1,139 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Project } from '../types/project';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Container,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Button,
+  Grid,
+  Paper,
+  Typography
+} from '@mui/material';
+import { ProjectFormData } from '../types/project';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const ProjectList = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+const ProjectForm = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<ProjectFormData>({
+    projectName: '',
+    location: 'New York',
+    area: '',
+    tier: 'Simple'
+  });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        let apiUrl = `${process.env.REACT_APP_API_URL}` || `http://localhost:5000/api`;
-        const response = await axios.get(`${apiUrl}/projects`);
-        setProjects(response.data);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-    };
-    fetchProjects();
-  }, []);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/projects', {
+        ...formData,
+        area: Number(formData.area)
+      });
+      navigate(`/summary/${response.data.projectName}`, { state: response.data });
+    } catch (error) {
+      console.error('Error submitting project:', error);
+    }
+  };
 
   return (
-    <div>
-      <h2>All Projects</h2>
-      <Link to="/">Create New Project</Link>
-      <table>
-        <thead>
-          <tr>
-            <th>Project Name</th>
-            <th>Location</th>
-            <th>Tier</th>
-            <th>Area</th>
-            <th>Total Cost</th>
-            <th>Created At</th>
-          </tr>
-        </thead>
-        <tbody>
-          {projects.map((project) => (
-            <tr key={project.id}>
-              <td>{project.projectName}</td>
-              <td>{project.location}</td>
-              <td>{project.tier}</td>
-              <td>{project.area} sqft</td>
-              <td>${project.totalCost.toLocaleString()}</td>
-              <td>{new Date(project.createdAt).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+       <Button
+          component={Link}
+          to="/"
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 3 }}
+        >
+          Back to Project List
+        </Button>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          New Project Configuration
+        </Typography>
+        
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Project Name"
+                variant="outlined"
+                value={formData.projectName}
+                onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel>Location</InputLabel>
+                <Select
+                  value={formData.location}
+                  label="Location"
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                >
+                  {['New York', 'Dallas', 'Greeley', 'Herndon'].map((loc) => (
+                    <MenuItem key={loc} value={loc}>{loc}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Area (sqft)"
+                type="number"
+                variant="outlined"
+                value={formData.area}
+                onChange={(e) => setFormData({ ...formData, area: e.target.value })}
+                inputProps={{ min: 1 }}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Tier</FormLabel>
+                <RadioGroup
+                  row
+                  value={formData.tier}
+                  onChange={(e) => setFormData({ ...formData, tier: e.target.value })}
+                >
+                  {['Simple', 'Enhanced', 'Advanced'].map((tier) => (
+                    <FormControlLabel
+                      key={tier}
+                      value={tier}
+                      control={<Radio />}
+                      label={tier}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                fullWidth
+              >
+                Calculate Cost
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 
-export default ProjectList;
+export default ProjectForm;

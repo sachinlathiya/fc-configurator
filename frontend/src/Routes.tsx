@@ -6,9 +6,9 @@ import ProjectList from './components/ProjectList';
 export default function Routes() {
   return (
     <RouterRoutes>
-      <Route path="/" element={<ProjectForm />} />
+      <Route path="/" element={<ProjectList />} />
       <Route path="/summary/:projectName" element={<ProjectSummary />} />
-      <Route path="/all-projects" element={<ProjectList />} />
+      <Route path="/add-project" element={<ProjectForm />} />
     </RouterRoutes>
   );
 }

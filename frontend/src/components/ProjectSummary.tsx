@@ -16,7 +16,7 @@ const ProjectSummary = () => {
           startIcon={<ArrowBackIcon />}
           sx={{ mb: 3 }}
         >
-          Back to Form
+          Back to List
         </Button>
 
         <Typography variant="h4" gutterBottom>
@@ -51,7 +51,7 @@ const ProjectSummary = () => {
 
         <Button
           component={Link}
-          to="/all-projects"
+          to="/"
           variant="outlined"
           sx={{ mt: 3 }}
           fullWidth
