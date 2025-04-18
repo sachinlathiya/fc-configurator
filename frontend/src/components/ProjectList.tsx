@@ -55,6 +55,7 @@ const ProjectList = () => {
               <TableCell sx={{ color: 'white' }}>Tier</TableCell>
               <TableCell sx={{ color: 'white' }}>Area (sqft)</TableCell>
               <TableCell sx={{ color: 'white' }}>Total Cost</TableCell>
+              <TableCell sx={{ color: 'white' }}>Cost/SF</TableCell>
               <TableCell sx={{ color: 'white' }}>Created Date</TableCell>
             </TableRow>
           </TableHead>
@@ -66,6 +67,7 @@ const ProjectList = () => {
                 <TableCell>{project.tier}</TableCell>
                 <TableCell>{project.area.toLocaleString()}</TableCell>
                 <TableCell>${project.totalCost.toLocaleString()}</TableCell>
+                <TableCell>${project.costPerSqft.toLocaleString()}</TableCell>
                 <TableCell>
                   {new Date(project.createdAt).toLocaleDateString()}
                 </TableCell>
