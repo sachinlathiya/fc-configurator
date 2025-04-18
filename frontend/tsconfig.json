@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "types": ["node", "react", "react-dom"],
+      "jsx": "react-jsx",
+    }
+  }

@@ -3,8 +3,13 @@ const cors = require('cors');
 const app = express();
 const projectsRouter = require('./routes/projects');
 
+const config = require('./config/config');
+
 app.use(cors());
+app.use(cors(config.corsOptions));
 app.use(express.json());
+
+
 
 // Create data directory if not exists
 const fs = require('fs');
@@ -16,5 +21,6 @@ if (!fs.existsSync(dataDir)) {
 
 app.use('/api/projects', projectsRouter);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(config.port, () => 
+    console.log(`Server running in ${config.nodeEnv} mode on port ${config.port}`)
+);
